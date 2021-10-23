@@ -1,4 +1,4 @@
-#include "libmx.h"
+#include "../inc/libmx.h"
 
 int mx_read_line(char** lineptr, size_t buf_size, char delim, const int fd) {
     if (buf_size == 0 || fd == 0) {
@@ -7,17 +7,17 @@ int mx_read_line(char** lineptr, size_t buf_size, char delim, const int fd) {
 
     (*lineptr) = (char*)mx_realloc(*lineptr, buf_size);
     mx_memset((*lineptr), '\0', malloc_size((*lineptr)));
-    size_t ress = 0;
+    size_t bytes = 0;
     char buf;
 
     if (read(fd, &buf, 1)) {
         if (buf == delim) {
-            return ress;
+            return bytes;
         }
 
-        (*lineptr) = (char*)mx_realloc(*lineptr, ress + 1);
-        (*lineptr)[ress] = buf;
-        ress++;
+        (*lineptr) = (char*)mx_realloc(*lineptr, bytes + 1);
+        (*lineptr)[bytes] = buf;
+        bytes++;
     }
     else {
         return -1;
@@ -28,19 +28,19 @@ int mx_read_line(char** lineptr, size_t buf_size, char delim, const int fd) {
             break;
         }
 
-        if (ress >= buf_size) {
-            (*lineptr) = (char*)mx_realloc(*lineptr, ress + 1);
+        if (bytes >= buf_size) {
+            (*lineptr) = (char*)mx_realloc(*lineptr, bytes + 1);
         }
 
-        (*lineptr)[ress] = buf;
-        ress++;
+        (*lineptr)[bytes] = buf;
+        bytes++;
     }
 
-    (*lineptr) = (char*)mx_realloc(*lineptr, ress + 1);
+    (*lineptr) = (char*)mx_realloc(*lineptr, bytes + 1);
 
-    size_t free_ress = malloc_size((*lineptr)) - ress;
-    mx_memset(&(*lineptr)[ress], '\0', free_ress);
+    size_t free_bytes = malloc_size((*lineptr)) - bytes;
+    mx_memset(&(*lineptr)[bytes], '\0', free_bytes);
 
-    return ress + 1;
+    return bytes + 1;
 }
 

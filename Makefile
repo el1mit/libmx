@@ -1,30 +1,33 @@
-NAME_LIB = libmx.a
+CC = clang
+CFLAGS = -std=c11 -Wall -Wextra -Werror -Wpedantic
 
-FLAGS = -std=c11 -Wall -Wextra -Werror -Wpedantic
+OBJDIR = obj
+SRCDIR = src
+LIBNAME = libmx.a
+LIB = LIBMX
 
-all: create_obj LIBMX create_lib clean
+SRC = $(SRCDIR)/*.c
+OBJS = $(OBJDIR)/*.o
 
-create_obj:
-	mkdir obj
-	cp inc/*.h src
+all: $(LIB)
 
-LIBMX:
-	clang $(FLAGS) -c src/*.c
-	mv *.o obj/
-
-create_lib:
-	ar -rc $(NAME_LIB) obj/*.o
-	ranlib $(NAME_LIB)
+$(LIB):
+	mkdir $(OBJDIR)
+	$(CC) $(CFLAGS) -c $(SRC)
+	mv *.o $(OBJDIR)
+	ar rcs $(LIBNAME) $(OBJS)
+	clang -o a $(OBJDIR)/*.o
 
 clean:
-	rm -rf obj
-	rm src/*.h
+	rm -f $(OBJS)
+	rm -df $(OBJDIR)
 
 uninstall:
-	rm -rf obj
-	rm -rf $(NAME_LIB)
+	make clean
+	rm -f $(LIBNAME)
 
 reinstall:
 	make uninstall
-	make
+	make all
 
+	

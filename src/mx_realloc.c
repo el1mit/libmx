@@ -1,4 +1,4 @@
-#include "libmx.h"
+#include "../inc/libmx.h"
 
 void* mx_realloc(void* ptr, size_t new_size) {
     size_t cur_size;

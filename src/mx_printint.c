@@ -1,4 +1,4 @@
-#include "libmx.h"
+#include "../inc/libmx.h"
 
 void mx_printint(int num) {
     if (num == -2147483648) { 
